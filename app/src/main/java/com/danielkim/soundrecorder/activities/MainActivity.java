@@ -1,14 +1,20 @@
 package com.danielkim.soundrecorder.activities;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,10 +26,10 @@ import com.danielkim.soundrecorder.fragments.LicensesFragment;
 import com.danielkim.soundrecorder.fragments.RecordFragment;
 
 
-public class MainActivity extends ActionBarActivity{
+public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-
+    private int PermissionCOde = 111;
     private PagerSlidingTabStrip tabs;
     private ViewPager pager;
 
@@ -42,6 +48,8 @@ public class MainActivity extends ActionBarActivity{
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+
+        Permission();
     }
 
     @Override
@@ -100,5 +108,16 @@ public class MainActivity extends ActionBarActivity{
     }
 
     public MainActivity() {
+    }
+
+    public void Permission (){
+        String[] isPermissionGranted ={Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,isPermissionGranted,PermissionCOde);
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,isPermissionGranted,PermissionCOde);
+            }
+        }
+
     }
 }

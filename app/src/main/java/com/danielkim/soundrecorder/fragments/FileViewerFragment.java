@@ -74,7 +74,7 @@ public class FileViewerFragment extends Fragment{
                         String filePath = android.os.Environment.getExternalStorageDirectory().toString()
                                 + "/SoundRecorder" + file + "]";
 
-                        Log.d(LOG_TAG, "File deleted ["
+                        Log.d("LOG_TAG", "File deleted ["
                                 + android.os.Environment.getExternalStorageDirectory().toString()
                                 + "/SoundRecorder" + file + "]");
 
