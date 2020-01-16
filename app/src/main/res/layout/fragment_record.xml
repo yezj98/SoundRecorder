@@ -4,7 +4,8 @@
     android:id="@+id/fragment_record"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:theme="@style/Theme.AppCompat.NoActionBar">
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/btnRecord"
@@ -37,9 +38,11 @@
         android:indeterminate="false"
         android:max="100"
         android:progress="0"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+
 
     <Button
         android:layout_width="wrap_content"
@@ -56,6 +59,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"/>
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,5 +72,29 @@
         android:layout_above="@+id/btnRecord"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/recording_status_text"
+        android:layout_marginBottom="150dp"
+        android:gravity="center"
+        android:text="00:00"
+        android:textColor="#D30A0A"
+        android:textSize="30dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/timeredit"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Set the timer"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:layout_above="@+id/recording_status_text"
+        android:layout_marginBottom="80dp" />
+
 
 </RelativeLayout>

@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -57,6 +59,7 @@ public class FileViewerFragment extends Fragment{
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mFileViewerAdapter = new FileViewerAdapter(getActivity(), llm);
+        Log.d("whatistis" ,""+mFileViewerAdapter);
         mRecyclerView.setAdapter(mFileViewerAdapter);
 
         return v;

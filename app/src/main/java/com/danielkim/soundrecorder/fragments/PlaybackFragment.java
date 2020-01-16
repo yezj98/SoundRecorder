@@ -21,6 +21,9 @@ import com.danielkim.soundrecorder.RecordingItem;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,6 +45,7 @@ public class PlaybackFragment extends DialogFragment{
     private TextView mCurrentProgressTextView = null;
     private TextView mFileNameTextView = null;
     private TextView mFileLengthTextView = null;
+
 
     //stores whether or not the mediaplayer is currently playing audio
     private boolean isPlaying = false;

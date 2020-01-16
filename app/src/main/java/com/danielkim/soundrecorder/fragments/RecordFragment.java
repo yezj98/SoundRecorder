@@ -1,24 +1,30 @@
 package com.danielkim.soundrecorder.fragments;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chibde.visualizer.CircleBarVisualizer;
 import com.danielkim.soundrecorder.R;
 import com.danielkim.soundrecorder.RecordingService;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,20 +37,27 @@ public class RecordFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_POSITION = "position";
     private static final String LOG_TAG = RecordFragment.class.getSimpleName();
-
+    private static final long START_TIME_IN_MILLIS = 60000;
     private int position;
+    int j = 0;
 
     //Recording controls
     private FloatingActionButton mRecordButton = null;
     private Button mPauseButton = null;
+    private EditText timing;
+    private CircleBarVisualizer circleBarVisualizer;
+    Boolean timeRunning;
 
-    private TextView mRecordingPrompt;
+    private TextView mRecordingPrompt, timer1;
     private int mRecordPromptCount = 0;
 
     private boolean mStartRecording = true;
     private boolean mPauseRecording = true;
 
+
+    private CountDownTimer countDownTimer;
     private Chronometer mChronometer = null;
+    private long timeLeftInMillis = START_TIME_IN_MILLIS;
     long timeWhenPaused = 0; //stores time when user clicks pause button
 
     /**
@@ -75,19 +88,30 @@ public class RecordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View recordView = inflater.inflate(R.layout.fragment_record, container, false);
-
+        timing = recordView.findViewById(R.id.timeredit);
         mChronometer = (Chronometer) recordView.findViewById(R.id.chronometer);
         //update recording prompt text
         mRecordingPrompt = (TextView) recordView.findViewById(R.id.recording_status_text);
-
+        timer1 = recordView.findViewById(R.id.textView2);
         mRecordButton = (FloatingActionButton) recordView.findViewById(R.id.btnRecord);
         mRecordButton.setColorNormal(getResources().getColor(R.color.primary));
         mRecordButton.setColorPressed(getResources().getColor(R.color.primary_dark));
+
         mRecordButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                onRecord(mStartRecording);
-                mStartRecording = !mStartRecording;
+
+                if (timing.getText().toString().isEmpty()) {
+                    onRecord(mStartRecording);
+                    mStartRecording = !mStartRecording;
+
+                } else {
+                    j = Integer.parseInt(timing.getText().toString());
+                    Countdown(j);
+                }
+
+
             }
         });
 
@@ -106,7 +130,7 @@ public class RecordFragment extends Fragment {
 
     // Recording Start/Stop
     //TODO: recording pause
-    private void onRecord(boolean start){
+    private void onRecord(boolean start) {
 
         Intent intent = new Intent(getActivity(), RecordingService.class);
 
@@ -114,7 +138,7 @@ public class RecordFragment extends Fragment {
             // start recording
             mRecordButton.setImageResource(R.drawable.ic_media_stop);
             //mPauseButton.setVisibility(View.VISIBLE);
-            Toast.makeText(getActivity(),R.string.toast_recording_start,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.toast_recording_start, Toast.LENGTH_SHORT).show();
             File folder = new File(Environment.getExternalStorageDirectory() + "/SoundRecorder");
             if (!folder.exists()) {
                 //folder /SoundRecorder doesn't exist, create the folder
@@ -161,6 +185,7 @@ public class RecordFragment extends Fragment {
             //allow the screen to turn off again once recording is finished
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
+
     }
 
     //TODO: implement pause recording
@@ -168,17 +193,42 @@ public class RecordFragment extends Fragment {
         if (pause) {
             //pause recording
             mPauseButton.setCompoundDrawablesWithIntrinsicBounds
-                    (R.drawable.ic_media_play ,0 ,0 ,0);
-            mRecordingPrompt.setText((String)getString(R.string.resume_recording_button).toUpperCase());
+                    (R.drawable.ic_media_play, 0, 0, 0);
+            mRecordingPrompt.setText((String) getString(R.string.resume_recording_button).toUpperCase());
             timeWhenPaused = mChronometer.getBase() - SystemClock.elapsedRealtime();
             mChronometer.stop();
         } else {
             //resume recording
             mPauseButton.setCompoundDrawablesWithIntrinsicBounds
-                    (R.drawable.ic_media_pause ,0 ,0 ,0);
-            mRecordingPrompt.setText((String)getString(R.string.pause_recording_button).toUpperCase());
+                    (R.drawable.ic_media_pause, 0, 0, 0);
+            mRecordingPrompt.setText((String) getString(R.string.pause_recording_button).toUpperCase());
             mChronometer.setBase(SystemClock.elapsedRealtime() + timeWhenPaused);
             mChronometer.start();
         }
     }
+
+    private void Countdown(int x) {
+        new CountDownTimer(x, 1000) {
+            public void onTick(long millisUntilFinished) {
+                int time = (int) (millisUntilFinished / 1000);
+
+                timer1.setText("seconds remaining: " + millisUntilFinished / 1000);
+
+            }
+
+            public void onFinish() {
+                onRecord(true);
+
+                mRecordButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onRecord(false);
+                    }
+                });
+
+            }
+        }.start();
+    }
+
+
 }

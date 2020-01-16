@@ -12,14 +12,19 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.chibde.visualizer.CircleBarVisualizer;
 import com.danielkim.soundrecorder.activities.MainActivity;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,6 +38,9 @@ public class RecordingService extends Service {
 
     private String mFileName = null;
     private String mFilePath = null;
+    public  File f;
+    List <String> searchList = new ArrayList<>();
+    CircleBarVisualizer circleBarVisualizer;
 
     private MediaRecorder mRecorder = null;
 
@@ -89,6 +97,9 @@ public class RecordingService extends Service {
         if (MySharedPreferences.getPrefHighQuality(this)) {
             mRecorder.setAudioSamplingRate(44100);
             mRecorder.setAudioEncodingBitRate(192000);
+            circleBarVisualizer.setPlayer(100);
+
+
         }
 
         try {
@@ -106,17 +117,20 @@ public class RecordingService extends Service {
 
     public void setFileNameAndPath(){
         int count = 0;
-        File f;
 
         do{
             count++;
 
             mFileName = getString(R.string.default_file_name)
                     + "_" + (mDatabase.getCount() + count) + ".mp4";
+
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
             mFilePath += "/SoundRecorder/" + mFileName;
-
+            Log.d("whatistis1",""+mFilePath);
+            searchList.add(mFileName);
+            Log.d("search",""+ searchList);
             f = new File(mFilePath);
+            Log.d("wtf","" +f);
         }while (f.exists() && !f.isDirectory());
     }
 

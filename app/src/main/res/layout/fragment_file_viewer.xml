@@ -9,7 +9,7 @@
 
     <EditText
         android:layout_width="match_parent"
-        
+        android:id="@+id/SeachBar"
         android:layout_height="wrap_content"
         android:hint="Enter the file name"
         android:textColorHint="#0E0808">
