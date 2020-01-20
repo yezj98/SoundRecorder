@@ -232,7 +232,7 @@ public class FileViewerAdapter extends RecyclerView.Adapter<FileViewerAdapter.Re
     }
 
     public void shareFileDialog(int position) {
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder().detectActivityLeaks();
         StrictMode.setVmPolicy(builder.build());
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
