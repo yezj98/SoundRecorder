@@ -108,7 +108,7 @@ public class RecordFragment extends Fragment {
 
                 } else {
                     j = Integer.parseInt(timing.getText().toString());
-                    Countdown(j);
+                    Countdown((j*1000));
                 }
 
 
@@ -211,6 +211,7 @@ public class RecordFragment extends Fragment {
         new CountDownTimer(x, 1000) {
             public void onTick(long millisUntilFinished) {
                 int time = (int) (millisUntilFinished / 1000);
+
 
                 timer1.setText("seconds remaining: " + millisUntilFinished / 1000);
 
