@@ -1,13 +1,16 @@
 package com.danielkim.soundrecorder.fragments;
 
 import android.content.Intent;
+import android.icu.text.AlphabeticIndex;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +28,7 @@ import com.melnykov.fab.FloatingActionButton;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.zip.Inflater;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,26 +100,38 @@ public class RecordFragment extends Fragment {
         mRecordButton = (FloatingActionButton) recordView.findViewById(R.id.btnRecord);
         mRecordButton.setColorNormal(getResources().getColor(R.color.primary));
         mRecordButton.setColorPressed(getResources().getColor(R.color.primary_dark));
+        mPauseButton = (Button) recordView.findViewById(R.id.btnPause);
+
 
         mRecordButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                String d = timing.getText().toString();
+                Log.d("timing4",""+timing.getText().toString());
 
-                if (timing.getText().toString().isEmpty()) {
+                if (d.isEmpty()) {
+                    Log.d("timing3",""+timing.getText().toString());
                     onRecord(mStartRecording);
                     mStartRecording = !mStartRecording;
+                    Log.d("thisis",""+mStartRecording);
+
+
 
                 } else {
+
+                    Log.d("timing2",""+timing.getText().toString());
+
                     j = Integer.parseInt(timing.getText().toString());
                     Countdown((j*1000));
+
+
                 }
 
 
             }
         });
 
-        mPauseButton = (Button) recordView.findViewById(R.id.btnPause);
         mPauseButton.setVisibility(View.GONE); //hide pause button before recording starts
         mPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,11 +187,11 @@ public class RecordFragment extends Fragment {
 
             mRecordingPrompt.setText(getString(R.string.record_in_progress) + ".");
             mRecordPromptCount++;
+            mPauseButton.setVisibility(View.VISIBLE);
 
         } else {
             //stop recording
             mRecordButton.setImageResource(R.drawable.ic_mic_white_36dp);
-            //mPauseButton.setVisibility(View.GONE);
             mChronometer.stop();
             mChronometer.setBase(SystemClock.elapsedRealtime());
             timeWhenPaused = 0;
@@ -184,6 +200,7 @@ public class RecordFragment extends Fragment {
             getActivity().stopService(intent);
             //allow the screen to turn off again once recording is finished
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            mPauseButton.setVisibility(View.GONE);
         }
 
     }
@@ -217,15 +234,35 @@ public class RecordFragment extends Fragment {
 
             }
 
-            public void onFinish() {
-                onRecord(true);
+                public void onFinish() {
 
-                mRecordButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onRecord(false);
-                    }
-                });
+
+                    onRecord(mStartRecording);
+                    mStartRecording =! mStartRecording;
+                    timer1.setText("");
+                    timing.getText().clear();
+                    mPauseButton.setVisibility(View.VISIBLE);
+
+//                    mRecordButton.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent intent = new Intent(getActivity(), RecordingService.class);
+//                            onRecord(mStartRecording);
+//                            getActivity().startService(intent);
+//                            //keep screen on while recording
+//                            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//
+//                            Log.d("co","");
+//                            mPauseButton.setVisibility(View.GONE);
+//
+//
+//                            //allow the screen to turn off again once recording is finished
+//                            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//                            Log.d("hhh",""+ mStartRecording);
+
+
+//                        }
+//                    });
 
             }
         }.start();
