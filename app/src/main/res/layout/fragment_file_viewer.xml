@@ -7,15 +7,6 @@
     tools:context="com.danielkim.soundrecorder.fragments.FileViewerFragment">
 
 
-    <EditText
-        android:layout_width="match_parent"
-        android:id="@+id/SeachBar"
-        android:layout_height="wrap_content"
-        android:hint="Enter the file name"
-        android:textColorHint="#0E0808">
-
-    </EditText>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

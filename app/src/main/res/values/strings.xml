@@ -41,6 +41,8 @@
     <string name="default_file_name">My Recording</string>
     <string name="record_prompt">Tap the button to start recording</string>
     <string name="record_in_progress">Recording</string>
+    <string name="set_timer">set the timer in second</string>
+    <string name="second">second remaining</string>
 
     <string name="send_to">Send to</string>
 
